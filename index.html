@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="viewport"
+    content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no minimal-ui">
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <title>find it</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    #score-wrap {
+      padding: 50px 0 40px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 30px;
+    }
+
+    #wrap {
+      margin: auto;
+      width: 90%;
+      max-width: 500px;
+      font-size: 0;
+    }
+
+    #wrap span {
+      display: inline-block;
+      border-radius: 50%;
+    }
+
+    #maxscore {
+      margin: 30px auto 0;
+      padding: 0 2em;
+      max-width: 500px;
+      font-size: 14px;
+      font-weight: normal;
+      text-align: right;
+    }
+
+    #difficultyLevel {
+      margin-top: 10px;
+      font-size: 20px;
+    }
+
+    .ranking {
+      margin: 30px auto 0;
+      padding: 0 2em;
+      max-width: 500px;
+      font-size: 14px;
+      font-weight: normal;
+      text-align: right;
+    }
+
+    .mask {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(204, 204, 204, .8);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .mask .title {
+      color: yellow;
+      font-size: 50px;
+      font-weight: 600;
+    }
+
+    .mask .mask_start {
+      text-align: center;
+    }
+
+    .mask .mask_start .enter {
+      font-size: 30px;
+      font-weight: 600;
+      background-color: #fdfdfd;
+      margin-top: 50px;
+      padding: 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .mask_counttime {
+      display: none;
+      color: red;
+      font-size: 60px;
+      font-weight: 600;
+    }
+
+    .gamealltime {
+      margin: 0 auto;
+      width: 500px;
+      height: 20px;
+    }
+
+    .gamealltime .meter {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- game score -->
+  <div id="score-wrap">
+    <span id="score">0</span>分
+    <div id="maxscore">
+      暂无最高分
+    </div>
+    <div class="ranking">排名</div>
+  </div>
+  <!-- game time -->
+  <div class="gamealltime">
+    <meter class="meter animate__animated" min="0" max="40" value="40"></meter>
+  </div>
+  <!-- game main -->
+  <div id="wrap"></div>
+  <!-- gameStart mask -->
+  <div class="mask_box">
+    <div class="mask">
+      <div class="mask_start">
+        <div class="title">Color Sense Challenge</div>
+        <select name="level" id="difficultyLevel">
+          <option value="A">纯色</option>
+          <option value="B">图片简单</option>
+          <option value="C">图片难</option>
+        </select>
+        <div class="enter">Start</div>
+      </div>
+      <div class='mask_counttime animate__animated animate__zoomIn animate__infinite'>3</div>
+    </div>
+  </div>
+
+
+  <script>
+    // 选择困难等级
+    var Level = 'A'
+    var difficultyLevel = document.querySelector('#difficultyLevel')
+    difficultyLevel.addEventListener('change', function (e) {
+      Level = e.target.value
+      creat()
+    })
+
+    // 定义获取随机16进制的颜色=========
+    // 兼容没有padStart的时候
+    if (!String.prototype.padStart) {
+      String.prototype.padStart = function padStart (targetLength, padString) {
+        targetLength = targetLength >> 0 //truncate if number or convert non-number to 0;
+        padString = String((typeof padString !== 'undefined' ? padString : ' '))
+        if (this.length > targetLength) {
+          console.log(11)
+          return String(this)
+        } else {
+          console.log(22)
+          targetLength = targetLength - this.length
+          if (targetLength > padString.length) {
+            padString += padString.repeat(targetLength / padString.length) //append to original to ensure we are longer than needed
+          }
+          return padString.slice(0, targetLength) + String(this)
+        }
+      }
+    }
+    //随机色
+    function randColor (num) {
+      return '#' + Math.floor(Math.random() * 0xcccccc).toString(16).padStart(6, 0)
+    }
+    // 定义获取随机16进制的颜色=========
+
+    // 获取元素，初始化状态========
+    var score = document.querySelector('#score')
+    var maxscore = document.querySelector('#maxscore')
+    var wrap = document.querySelector('#wrap')
+    //分数
+    var points = 0
+    //行数
+    var count = 2
+    //色值差
+    var opacity = .6
+    //点错次数
+    var max_click = 0
+    // 图片列表
+    var goodsPicList = [
+      { id: 0, url: 'https://mcusercontent.com/9a1afe321b5e531c9e8a98697/images/76805f44-b950-ec00-e188-25a2d2885612.png' },
+      { id: 1, url: 'https://mcusercontent.com/9a1afe321b5e531c9e8a98697/images/1e28e31a-ca60-6055-a175-1cbac0be19aa.png' },
+      { id: 2, url: 'https://mcusercontent.com/9a1afe321b5e531c9e8a98697/images/9afa8d86-9d37-4fbf-78d0-1628c37409c8.png' },
+      { id: 3, url: 'https://mcusercontent.com/9a1afe321b5e531c9e8a98697/images/755cb9e3-452e-04bf-2d3b-db4dd161b16f.png' },
+      { id: 4, url: 'https://mcusercontent.com/9a1afe321b5e531c9e8a98697/images/303f287d-c3b7-3f9a-57f0-8f2ca5be157e.jpg' },
+      { id: 5, url: 'https://mcusercontent.com/9a1afe321b5e531c9e8a98697/images/a43fd226-3ff9-6f5f-144d-148a5299c950.jpg' },
+      { id: 6, url: 'https://mcusercontent.com/9a1afe321b5e531c9e8a98697/images/07a9e4d7-dc1c-3c71-9ee3-aeb5f01a179d.jpg' },
+      { id: 7, url: 'https://mcusercontent.com/9a1afe321b5e531c9e8a98697/images/9c3576af-45eb-cc20-2b5b-b33464893859.jpg' },
+      { id: 8, url: 'https://mcusercontent.com/9a1afe321b5e531c9e8a98697/images/cbdd1632-bced-1a60-c197-f8b0a0d838ce.jpg' },
+      { id: 9, url: 'https://mcusercontent.com/9a1afe321b5e531c9e8a98697/images/f7ba5a20-7f7f-1934-9f1d-60ba0cf1029c.jpg' },
+    ]
+    // 获取元素，初始化状态========
+
+    window.onload = creat
+    function creat () {
+      // 获取用户的最高分，并展示（提示游客注册，后续最高分存储）
+      localStorage.maxscore ? (maxscore.innerHTML = '历史最高: ' + localStorage.maxscore + '分') : localStorage.setItem('maxscore', 0)
+
+      //无色差后通关
+      if (opacity >= 1) {
+        alert(points + '分\n你通关了！')
+        localStorage.maxscore = points
+        points = 0
+        count = 2
+        opacity = .6
+        max_click = 0
+        creat()  // 重新开始
+        return
+      }
+
+      // 每次点击之后需要更新的参数- 点错次数 ， 分数 ，新色块 ，颜色 ， 随机色差块
+      max_click = 0
+      score.innerHTML = points
+      var html = ''
+      var color = randColor()
+      var goodsPicList_num = Math.floor(Math.random() * 10)
+      for (var i = 0; i < count * count; i++) {
+        if (Level == 'A') {
+          // 纯色版
+          html += '<span style="background: ' + color + '; width: ' + 100 / count + '%; padding-top: ' + 100 / count + '%;"></span>'
+        } else if (Level == 'B') {
+          // 图片简单版
+          html += '<span style="background:url(' + goodsPicList[goodsPicList_num].url + ') no-repeat center / 100% ' + '; width: ' + 100 / count + '%; padding-top: ' + 100 / count + '%;"></span>'
+        } else if (Level == 'C') {
+          // 图片困难版
+          html += '<span style="background:url(' + goodsPicList[Math.floor(Math.random() * 10)].url + ') no-repeat center / 100% ' + '; width: ' + 100 / count + '%; padding-top: ' + 100 / count + '%;"></span>'
+        }
+      }
+      wrap.innerHTML = html
+      // 每块添加高度
+      document.querySelectorAll('#wrap span').forEach(function (el, i) {
+        el.style.height = el.offsetWidth + 'px'
+      })
+      //随机色差块
+      document.querySelectorAll('#wrap span')[Math.floor(Math.random() * count * count)].classList.add('opacity')  // 随机一块添加 opacity 类
+      var span = document.querySelectorAll('#wrap span') // 获取每块span色块
+      var op = document.querySelector('.opacity') // 获取色差色块
+      op.style.opacity = opacity  // 添加色差
+
+      // 每一块添加点击错误事件，
+      span.forEach(function (el) {
+        el.onclick = function () {
+          max_click++
+          if (max_click >= 1) { // 如果点击到其它色块，记录最高分，初始化
+            localStorage.maxscore < points && (localStorage.maxscore = points)
+            var again = confirm('\t' + points + '分\t\n\t再来一局不？\t') // 跳回遮罩层
+            points = 0
+            count = 2
+            opacity = .6
+            max_click = 0
+
+            meter.setAttribute('value', 40)
+            GameAlltime = 40
+            clearInterval(timer2)
+            maskBox.style.display = 'block'
+            mask_start.style.display = 'block'
+            mask_counttime.style.display = 'none'
+
+            creat() // 重新开始
+          }
+        }
+      })
+
+      // 色差块绑定下一级事件，覆盖上面的错误事件
+      op.onclick = function () {
+        points++
+        count++
+        if (count > 8) {
+          count = 8
+          opacity > .8 ? opacity /= .995 : opacity /= .99
+        }
+        localStorage.maxscore < points && (localStorage.maxscore = points)
+        creat() // 在原来的基础上重新开始
+      }
+
+    }
+
+
+    // 点击start => 倒计时 3 2 1 进入 => 开始 =============
+    var timer2 = null
+    var enter = document.querySelector('.enter')
+    var mask = document.querySelector('.mask')
+    var maskBox = document.querySelector('.mask_box')
+    var mask_start = document.querySelector('.mask_start')
+    var mask_counttime = document.querySelector('.mask_counttime')
+    var time = 3
+    enter.addEventListener('click', function () {
+      mask_start.style.display = 'none'
+      mask_counttime.style.display = 'block'
+      time = time - 1
+      Countdown() // 倒计时 3 2 1 
+    })
+    function Countdown () {
+      var timer1 = setInterval(() => {
+        mask_counttime.innerHTML = time
+        time = time - 1
+        if (time == -1) {
+          clearInterval(timer1)
+          maskBox.style.display = 'none'
+          time = 3
+          mask_counttime.innerHTML = time
+          GameCountdown()
+        }
+      }, 1000)
+    }
+
+
+    // 计时器 =================
+    var GameAlltime = 40
+    var meter = document.querySelector('.meter')
+    function GameCountdown () {
+      meter.setAttribute('value', GameAlltime)
+      GameAlltime = GameAlltime - 1
+
+      timer2 = setInterval(() => {
+        meter.setAttribute('value', GameAlltime)
+        if (meter.getAttribute('value') < 10) {
+          meter.classList.add('animate__bounceIn')
+        }
+        GameAlltime = GameAlltime - 1
+        if (GameAlltime == -1) {
+          clearInterval(timer2)
+          // 结束
+          alert('game over') // 跳回遮罩层
+          maskBox.style.display = 'block'
+          mask_start.style.display = 'block'
+          mask_counttime.style.display = 'none'
+          points = 0
+          count = 2
+          opacity = .6
+          max_click = 0
+          meter.setAttribute('value', 40)
+          GameAlltime = 40
+          creat()
+        }
+      }, 350)
+    }
+
+  </script>
+</body>
+
+</html>
