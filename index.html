@@ -143,7 +143,13 @@
 
 
   <script>
-    console.log('游戏说明:找出其中颜色不同的一个')
+    console.log('游戏玩法 : 点击其中颜色不同的一个。每天X次玩的机会。')
+    console.log('奖励奖品 : 根据得分获得红包 or 购物券 or 抽大奖的机会等')
+    console.log('邀请好友成功 : 增加倒计时时间 or 获得1次玩的机会')
+
+    // 游戏次数
+    var playGameTime = 0
+
     // 选择困难等级
     var Level = 'A'
     var difficultyLevel = document.querySelector('#difficultyLevel')
@@ -298,10 +304,15 @@
     var mask_counttime = document.querySelector('.mask_counttime')
     var time = 3
     enter.addEventListener('click', function () {
-      mask_start.style.display = 'none'
-      mask_counttime.style.display = 'block'
-      time = time - 1
-      Countdown() // 倒计时 3 2 1 
+      if (playGameTime == 3) {
+        alert('今天的机会用完了,邀请好友增加1次机会')
+      } else {
+        mask_start.style.display = 'none'
+        mask_counttime.style.display = 'block'
+        time = time - 1
+        Countdown() // 倒计时 3 2 1 
+        playGameTime = playGameTime + 1
+      }
     })
     function Countdown () {
       var timer1 = setInterval(() => {
@@ -316,7 +327,6 @@
         }
       }, 1000)
     }
-
 
     // 计时器 =================
     var GameAlltime = 40
@@ -348,6 +358,7 @@
         }
       }, 350)
     }
+
 
   </script>
 </body>
