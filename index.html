@@ -147,7 +147,6 @@
 </head>
 
 <body>
-
   <div class="challenge_box container">
     <div class="score_part">
       <div class="score_box">
@@ -177,23 +176,11 @@
       </div>
     </div>
   </div>
-
 </body>
 
 <script>
-  // 游戏次数
-  var playGameTime = 0
 
-  // 选择困难等级
-  var Level = 'A'
-  var difficultyLevel = document.querySelector('#difficultyLevel')
-  difficultyLevel.addEventListener('change', function (e) {
-    Level = e.target.value
-    creat()
-  })
-
-  // 定义获取随机16进制的颜色=========
-  // 兼容没有padStart的时候
+  // 定义获取随机16进制的颜色 =====
   if (!String.prototype.padStart) {
     String.prototype.padStart = function padStart (targetLength, padString) {
       targetLength = targetLength >> 0 //truncate if number or convert non-number to 0;
@@ -211,24 +198,18 @@
       }
     }
   }
-  //随机色
   function randColor (num) {
     return '#' + Math.floor(Math.random() * 0xcccccc).toString(16).padStart(6, 0)
   }
-  // 定义获取随机16进制的颜色=========
 
-  // 获取元素，初始化状态========
+  // 功能4 ; 游戏状态初始化，获取元素 =====
   var score = document.querySelector('#score')
   var maxscore = document.querySelector('#maxscore')
   var wrap = document.querySelector('#wrap')
-  //分数
-  var points = 0
-  //行数
-  var count = 2
-  //色值差
-  var opacity = .6
-  //点错次数
-  var max_click = 0
+  var points = 0 //分数
+  var count = 2 //行数
+  var opacity = .6 //色值差
+  var max_click = 0 //点错次数
   // 图片列表
   var goodsPicList = [
     { id: 0, url: 'https://mcusercontent.com/9a1afe321b5e531c9e8a98697/images/76805f44-b950-ec00-e188-25a2d2885612.png' },
@@ -242,8 +223,6 @@
     { id: 8, url: 'https://mcusercontent.com/9a1afe321b5e531c9e8a98697/images/cbdd1632-bced-1a60-c197-f8b0a0d838ce.jpg' },
     { id: 9, url: 'https://mcusercontent.com/9a1afe321b5e531c9e8a98697/images/f7ba5a20-7f7f-1934-9f1d-60ba0cf1029c.jpg' },
   ]
-  // 获取元素，初始化状态========
-
   window.onload = creat
   function creat () {
     // 获取用户的最高分，并展示（提示游客注册，后续最高分存储）
@@ -270,8 +249,8 @@
     for (var i = 0; i < count * count; i++) {
       if (Level == 'A') {
         // 纯色版
-        // html += '<span style="background: ' + color + '; width: ' + 100 / count + '%; padding-top: ' + 100 / count + '%;"></span>'
-        html += '<span style="background: linear-gradient(-45deg,' + color + ',#e73c7e,' + color + ',#23d5ab' + '); width: ' + 100 / count + '%; padding-top: ' + 100 / count + '%;' + 'background-size: 600% 600%;' + 'animation: gradientBG 5s ease infinite;" ></span>'
+        html += '<span style="background: ' + color + '; width: ' + 100 / count + '%; padding-top: ' + 100 / count + '%;"></span>'
+        // html += '<span style="background: linear-gradient(-45deg,' + color + ',#e73c7e,' + color + ',#23d5ab' + '); width: ' + 100 / count + '%; padding-top: ' + 100 / count + '%;' + 'background-size: 600% 600%;' + 'animation: gradientBG 5s ease infinite;" ></span>'
       } else if (Level == 'B') {
         // 图片简单版
         html += '<span style="background:url(' + goodsPicList[goodsPicList_num].url + ') no-repeat center / 100% ' + '; width: ' + 100 / count + '%; padding-top: ' + 100 / count + '%;"></span>'
@@ -329,8 +308,7 @@
 
   }
 
-
-  // 点击start => 倒计时 3 2 1 进入 => 开始 =============
+  // 功能1; 点击start => 倒计时 3 2 1 进入 => 开始 =====
   var timer2 = null
   var enter = document.querySelector('.enter')
   var mask = document.querySelector('.mask')
@@ -363,13 +341,12 @@
     }, 1000)
   }
 
-  // 计时器 15s =================
+  // 功能2; 计时器 15s =====
   var GameAlltime = 60
   var meter = document.querySelector('.meter')
   function GameCountdown () {
     meter.setAttribute('value', GameAlltime)
     GameAlltime = GameAlltime - 1
-
     timer2 = setInterval(() => {
       meter.setAttribute('value', GameAlltime)
       if (meter.getAttribute('value') < 10) {
@@ -394,6 +371,15 @@
     }, 250)
   }
 
+
+  // 功能3 ：选择不同难易等级
+  var playGameTime = 0  // 游戏次数
+  var Level = 'A' // 选择困难等级
+  var difficultyLevel = document.querySelector('#difficultyLevel')
+  difficultyLevel.addEventListener('change', function (e) {
+    Level = e.target.value
+    creat()
+  })
 
 </script>
 
