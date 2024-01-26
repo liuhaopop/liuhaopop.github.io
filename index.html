@@ -1,387 +1,439 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-  <title>find it</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    .container {
-      margin: 0 auto;
-      max-width: 500px;
-    }
-
-    .challenge_box {
-      width: 90%;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* score */
-    .challenge_box .score_part {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .challenge_box .score_part .score_box {
-      padding: 50px 0 30px;
-      text-align: center;
-    }
-
-    .challenge_box .score_part .score_box #score {
-      font-weight: 600;
-      font-size: 40px;
-    }
-
-    .challenge_box .score_part #maxscore {
-      text-align: right;
-    }
-
-    .challenge_box .score_part .ranking {
-      text-align: right;
-    }
-
-    /* gameTime */
-    .challenge_box .gameTime_part {
-      margin: 10px 0;
-      width: 100%;
-      height: 20px;
-    }
-
-    .challenge_box .gameTime_part .meter {
-      width: 100%;
-      height: 100%;
-    }
-
-    /* main_part */
-    .challenge_box .main_part {
-      width: 100%;
-    }
-
-    .challenge_box .main_part #wrap {
-      margin: auto;
-      width: 90%;
-      max-width: 500px;
-      font-size: 0;
-    }
-
-    .challenge_box .main_part #wrap span {
-      display: inline-block;
-      border-radius: 50%;
-    }
-
-    /* mask_part */
-    .challenge_box .mask_part {
-      width: 100%;
-    }
-
-    .challenge_box .mask_part .mask {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(204, 204, 204, .8);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .challenge_box .mask_part .mask .mask_start {
-      text-align: center;
-    }
-
-    .challenge_box .mask_part .mask .mask_start .title {
-      color: yellow;
-      font-size: 50px;
-      font-weight: 600;
-    }
-
-    .challenge_box .mask_part .mask .mask_start #difficultyLevel {
-      margin-top: 10px;
-      font-size: 20px;
-    }
-
-    .challenge_box .mask_part .mask .mask_start .enter {
-      width: 50%;
-      font-size: 30px;
-      font-weight: 600;
-      background-color: #fdfdfd;
-      margin: 50px auto 0;
-      padding: 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      text-align: center;
-    }
-
-    .challenge_box .mask_part .mask .mask_counttime {
-      display: none;
-      color: red;
-      font-size: 60px;
-      font-weight: 600;
-    }
-
-    /* 背景颜色动画 */
-    @keyframes gradientBG {
-      0% {
-        background-position: 0% 50%;
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+          /* 在线链接服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
+      @font-face {
+        font-family: "albb";
+        font-weight: 400;
+        src: url("http://at.alicdn.com/wf/webfont/UtqyOOTInYwh/j66d3Uavi7Io.woff2")
+            format("woff2"),
+          url("http://at.alicdn.com/wf/webfont/UtqyOOTInYwh/ElZddLrzcmO1.woff")
+            format("woff");
+        font-display: swap;
+      }
+      * {
+        box-sizing: border-box;
+        font-family: albb;
+        border: none!important;
+      }
+      html,
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        /* background: url('https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4a8a979202e043c480960b25d385e7a5~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=798&h=998&s=33164&e=webp&b=9a010b') no-repeat center; */
+        /* background: url('https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a6bdca2510534ecab6101a930f4f4d7c~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=437&h=800&s=426980&e=webp&f=125&b=c81212') no-repeat center; */
+        background-size: cover;
+        font-family: albb;
+        background: linear-gradient(45deg, rgb(77, 3, 3), rgb(157, 1, 1));
       }
 
-      50% {
-        background-position: 100% 50%;
+      .cover {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: url("https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f515124157f748968b3dcc84a38ad067~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=364&h=575&s=1117790&e=webp&f=100&b=e6e2bd")
+          no-repeat;
+        background-size: 100%;
+      }
+      .perspective-box {
+        perspective: 800px;
+        perspective-origin: center center;
+        transform-style: preserve-3d;
+        /* border: 4px solid green; */
+        /* background: url("https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4a8a979202e043c480960b25d385e7a5~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=798&h=998&s=33164&e=webp&b=9a010b") */
+          /* no-repeat center; */
+          /* background: url('./bg22.jpg') no-repeat; */
+          background: linear-gradient(45deg, rgb(77, 3, 3), rgb(157, 1, 1));
+        background-size: cover;
+         border: 1px dashed yellow!important;
+        /* 
+          position: absolute;
+          left: 0;
+          top:0;
+          border: 1px solid red; 
+        */
+        width: 1000px;
+        height: 600px;
+        overflow: hidden;
       }
 
-      100% {
-        background-position: 0% 50%;
+      .perspective-content {
+        /* perspective: 2000px; */
+        transform-style: preserve-3d;
+        position: absolute;
+        left: 0;
+        top: 0;
+        /* border: 1px solid red; */
+        width: 100%;
+        height: 100%;
+        /* animation: upup 5s linear infinite; */
       }
-    }
-  </style>
+
+      .pc2 {
+        transform: translateZ(-3000px) rotate(0deg);
+      }
+
+      .sence-box {
+        position: absolute;
+        left: 0;
+        top: 0;
+        /* margin-left: -100vw; */
+        /* border: 1px solid green; */
+        width: 100%;
+        height: 100%;
+        transform-style: preserve-3d;
+      }
+
+      .sence-in {
+        transform-style: preserve-3d;
+        border: 1px solid #fff;
+        height: 500px;
+      }
+
+      .sence-in .text-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        flex-direction: column;
+        position: absolute;
+        left: 0;
+        top: 100px;
+        /* border: 1px solid red; */
+        width: 200px;
+        height: 400px;
+        background: url("https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/31b3bc1063274e28ba90adf7cb7edce8~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=386&h=901&s=7074&e=webp&a=1&b=db2721")
+          no-repeat;
+        background-size: 100% 100%;
+        padding: 0 60px;
+        font-size: 50px;
+        color: #dbbb78;
+      }
+
+      .sence-in .text-right {
+        left: auto;
+        right: 0;
+      }
+
+      .pc1 {
+        animation: pc1 20s linear infinite;
+      }
+      .pc2 {
+        animation: pc2 20s linear infinite;
+      }
+
+      .pc2 .sence-box img {
+        /* border-color: red; */
+      }
+      .sence-block {
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        top: 200px;
+        left: 400px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 40px;
+        background: url("https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6b265e7d23f34e769ec9a5f952fee069~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1176&h=1176&s=49626&e=webp&a=1&b=d5502f")
+          no-repeat;
+        background-size: cover;
+        font-size: 30px;
+        color: #fdfcf5;
+      }
+
+      .long {
+        position: absolute;
+        left: -400px;
+        bottom: 0;
+        border: 1px solid #fff;
+        width: 400px;
+        height: 300px;
+        background: url('https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9705e283dc414d6484cf1c467a859ed4~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1200&h=570&s=115094&e=png&a=1&b=d90e00') no-repeat right bottom;
+        background-size: contain;
+        /* transform:translateZ(300px); */
+      }
+
+      .long-right{
+        left: auto;
+        right: -400px;
+        transform: rotateY(180deg);
+      }
+
+      .long2 {
+        position: absolute;
+        left: 200px;
+        bottom: 0;
+        width: 150px;
+        height: 150px;
+        border: 1px solid yellow;
+        background: url('https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/06b7e8f187a34109a134aa24b66f1d78~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=954&h=647&s=792959&e=png&a=1&b=e04736')no-repeat center;
+        background-size: contain;
+        transform: translateZ(600px);
+      }
+
+      .long2-right {
+        left: auto;
+        right: 200px;
+      }
+
+      .xiangyun{
+        position: absolute;
+        left: -400px;
+        bottom: 0;
+        width: 1600px;
+        height: 600px;
+        background: url('https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/aa5a2687d1244108afefd86b4ef5729a~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1157&h=369&s=62644&e=png&a=1&b=d60101') no-repeat center;
+        background-size: contain;
+        border: 1px solid yellow;
+        transform: translateZ(-200px);
+      }
+
+      .hua {
+        position: absolute;
+        left: 120px;
+        top: 130px;
+        height: 50px;
+        border: 1px solid #fff;
+        width: 50px;
+        background: url('./hua.png') no-repeat center;
+        background-size: contain;
+        /* animation: rot 5s infinite linear; */
+      }
+
+      .sence-box1 {
+        transform: translateZ(-500px);
+      }
+
+      .sence-box2 {
+        transform: translateZ(-1500px);
+      }
+
+      .sence-box3 {
+        transform: translateZ(-2500px);
+      }
+      .sence-box4 {
+        transform: translateZ(-3500px);
+      }
+      .sence-box5 {
+        transform: translateZ(-4500px);
+      }
+
+      .denglong-box {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 300px;
+        background: url("https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f4b556643a2e48289af3dad79ad29033~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=802&h=1373&s=57508&e=webp&a=1&b=d6502f")
+            no-repeat 50px,
+          url("https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c2a79cfefa0d43d8b550f3675753b94c~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=809&h=1528&s=43006&e=webp&a=1&b=d14a30")
+            no-repeat 150px,
+          url("https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f4b556643a2e48289af3dad79ad29033~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=802&h=1373&s=57508&e=webp&a=1&b=d6502f")
+            no-repeat 800px,
+          url("https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c2a79cfefa0d43d8b550f3675753b94c~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=809&h=1528&s=43006&e=webp&a=1&b=d14a30")
+            no-repeat 720px;
+        background-size: 120px, 100px;
+        transform: translateZ(400px);
+      }
+
+      @keyframes pc1 {
+        0% {
+          transform: translateZ(0px);
+          z-index: 99;
+        }
+
+        50% {
+          transform: translateZ(6000px);
+          z-index: 99;
+        }
+        50.1% {
+          transform: translateZ(-6000px);
+          /* opacity: 0.5; */
+          z-index: 1;
+        }
+        60% {
+          /* opacity: 1; */
+        }
+        100% {
+          transform: translateZ(0px);
+          z-index: 1;
+        }
+      }
+      @keyframes pc2 {
+        0% {
+          transform: translateZ(-6000px);
+          z-index: 1;
+          /* opacity: 0.5; */
+        }
+        10% {
+          /* opacity: 1; */
+        }
+        50% {
+          z-index: 1;
+        }
+        50.1% {
+          z-index: 99;
+        }
+        100% {
+          transform: translateZ(6000px);
+          z-index: 99;
+        }
+      }
+
+      @keyframes rot {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
 </head>
-
 <body>
-  <div class="challenge_box container">
-    <div class="score_part">
-      <div class="score_box">
-        <span id="score">0</span>分
-      </div>
-      <div id="maxscore">暂无最高分</div>
-      <div class="ranking">排名</div>
-    </div>
-    <div class="gameTime_part">
-      <meter class="meter animate__animated" min="0" max="60" value="60"></meter>
-    </div>
-    <div class="main_part">
-      <div id="wrap"></div>
-    </div>
-    <div class="mask_part">
-      <div class="mask">
-        <div class="mask_start">
-          <div class="title">Color Sense Challenge</div>
-          <select name="level" id="difficultyLevel">
-            <option value="A">纯色</option>
-            <option value="B">图片1</option>
-            <option value="C">图片2</option>
-          </select>
-          <div class="enter">Start</div>
+
+    <div class="perspective-box">
+        <div class="cover"></div>
+        <div class="perspective-content pc1">
+          <div class="sence-box sence-box1">
+            <div class="sence-in">
+              <div class="text-left text-box">百年好合</div>
+              <div class="text-right text-box">永结同心</div>
+              <div class="long long-left"></div>
+              <div class="long long-right"></div>
+              <div class="denglong-box"></div>
+              <div class="long2 long2-left"></div>
+              <div class="long2 long2-right"></div>
+            </div>
+          </div>
+          <div class="sence-box sence-box2">
+            <div class="sence-in">
+              <div class="text-left text-box">喜结良缘</div>
+              <div class="text-right text-box">白头偕老</div>
+              <div class="long long-left"></div>
+              <div class="long long-right"></div>
+              <div class="denglong-box"></div>
+              <div class="long2 long2-left"></div>
+              <div class="long2 long2-right"></div>
+              <div class="xiangyun"></div>
+            </div>
+          </div>
+          <div class="sence-box sence-box3">
+            <div class="sence-in">
+              <div class="text-left text-box">甜甜蜜蜜</div>
+              <div class="text-right text-box">两情相悦</div>
+              <div class="long long-left"></div>
+              <div class="long long-right"></div>
+              <div class="denglong-box"></div>
+              <div class="long2 long2-left"></div>
+              <div class="long2 long2-right"></div>
+              <div class="xiangyun"></div>
+            </div>
+          </div>
+          <div class="sence-box sence-box4">
+            <div class="sence-in">
+              <div class="text-left text-box">共度此生</div>
+              <div class="text-right text-box">如胶似漆</div>
+              <div class="long long-left"></div>
+              <div class="long long-right"></div>
+              <div class="denglong-box"></div>
+              <div class="long2 long2-left"></div>
+              <div class="long2 long2-right"></div>
+              <div class="xiangyun"></div>
+            </div>
+          </div>
+          <div class="sence-box sence-box5">
+            <div class="sence-in">
+              <div class="text-left text-box">心心相印</div>
+              <div class="text-right text-box">美满良缘</div>
+              <div class="sence-block">新婚快乐</div>
+              <div class="denglong-box"></div>
+              <div class="long long-left"></div>
+              <div class="long long-right"></div>
+              <div class="long2 long2-left"></div>
+              <div class="long2 long2-right"></div>
+              <div class="xiangyun"></div>
+            </div>
+          </div>
         </div>
-        <div class='mask_counttime animate__animated animate__zoomIn animate__infinite'>3</div>
+  
+        <div class="perspective-content pc2">
+          <div class="sence-box sence-box1">
+            <div class="sence-in">
+              <div class="text-left text-box">百年好合</div>
+              <div class="text-right text-box">永结同心</div>
+              <div class="long long-left"></div>
+              <div class="long long-right"></div>
+              <div class="denglong-box"></div>
+              <div class="long2 long2-left"></div>
+              <div class="long2 long2-right"></div>
+            </div>
+          </div>
+          <div class="sence-box sence-box2">
+            <div class="sence-in">
+              <div class="text-left text-box">喜结良缘</div>
+              <div class="text-right text-box">白头偕老</div>
+              <div class="long long-left"></div>
+              <div class="long long-right"></div>
+              <div class="denglong-box"></div>
+              <div class="long2 long2-left"></div>
+              <div class="long2 long2-right"></div>
+              <div class="xiangyun"></div>
+            </div>
+          </div>
+          <div class="sence-box sence-box3">
+            <div class="sence-in">
+              <div class="text-left text-box">甜甜蜜蜜</div>
+              <div class="text-right text-box">两情相悦</div>
+              <div class="long long-left"></div>
+              <div class="long long-right"></div>
+              <div class="denglong-box"></div>
+              <div class="long2 long2-left"></div>
+              <div class="long2 long2-right"></div>
+              <div class="xiangyun"></div>
+            </div>
+          </div>
+          <div class="sence-box sence-box4">
+            <div class="sence-in">
+              <div class="text-left text-box">共度此生</div>
+              <div class="text-right text-box">如胶似漆</div>
+              <div class="long long-left"></div>
+              <div class="long long-right"></div>
+              <div class="denglong-box"></div>
+              <div class="long2 long2-left"></div>
+              <div class="long2 long2-right"></div>
+              <div class="xiangyun"></div>
+            </div>
+          </div>
+          <div class="sence-box sence-box5">
+            <div class="sence-in">
+              <div class="text-left text-box">心心相印</div>
+              <div class="text-right text-box">美满良缘</div>
+              <div class="sence-block">新婚快乐</div>
+              <div class="denglong-box"></div>
+              <div class="long long-left"></div>
+              <div class="long long-right"></div>
+              <div class="long2 long2-left"></div>
+              <div class="long2 long2-right"></div>
+              <div class="xiangyun"></div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
+
+    
 </body>
-
-<script>
-
-  // 定义获取随机16进制的颜色 =====
-  if (!String.prototype.padStart) {
-    String.prototype.padStart = function padStart (targetLength, padString) {
-      targetLength = targetLength >> 0 //truncate if number or convert non-number to 0;
-      padString = String((typeof padString !== 'undefined' ? padString : ' '))
-      if (this.length > targetLength) {
-        console.log(11)
-        return String(this)
-      } else {
-        console.log(22)
-        targetLength = targetLength - this.length
-        if (targetLength > padString.length) {
-          padString += padString.repeat(targetLength / padString.length) //append to original to ensure we are longer than needed
-        }
-        return padString.slice(0, targetLength) + String(this)
-      }
-    }
-  }
-  function randColor (num) {
-    return '#' + Math.floor(Math.random() * 0xcccccc).toString(16).padStart(6, 0)
-  }
-
-  // 功能4 ; 游戏状态初始化，获取元素 =====
-  var score = document.querySelector('#score')
-  var maxscore = document.querySelector('#maxscore')
-  var wrap = document.querySelector('#wrap')
-  var points = 0 //分数
-  var count = 2 //行数
-  var opacity = .6 //色值差
-  var max_click = 0 //点错次数
-  // 图片列表
-  var goodsPicList = [
-    { id: 0, url: 'https://mcusercontent.com/9a1afe321b5e531c9e8a98697/images/76805f44-b950-ec00-e188-25a2d2885612.png' },
-    { id: 1, url: 'https://mcusercontent.com/9a1afe321b5e531c9e8a98697/images/1e28e31a-ca60-6055-a175-1cbac0be19aa.png' },
-    { id: 2, url: 'https://mcusercontent.com/9a1afe321b5e531c9e8a98697/images/9afa8d86-9d37-4fbf-78d0-1628c37409c8.png' },
-    { id: 3, url: 'https://mcusercontent.com/9a1afe321b5e531c9e8a98697/images/755cb9e3-452e-04bf-2d3b-db4dd161b16f.png' },
-    { id: 4, url: 'https://mcusercontent.com/9a1afe321b5e531c9e8a98697/images/303f287d-c3b7-3f9a-57f0-8f2ca5be157e.jpg' },
-    { id: 5, url: 'https://mcusercontent.com/9a1afe321b5e531c9e8a98697/images/a43fd226-3ff9-6f5f-144d-148a5299c950.jpg' },
-    { id: 6, url: 'https://mcusercontent.com/9a1afe321b5e531c9e8a98697/images/07a9e4d7-dc1c-3c71-9ee3-aeb5f01a179d.jpg' },
-    { id: 7, url: 'https://mcusercontent.com/9a1afe321b5e531c9e8a98697/images/9c3576af-45eb-cc20-2b5b-b33464893859.jpg' },
-    { id: 8, url: 'https://mcusercontent.com/9a1afe321b5e531c9e8a98697/images/cbdd1632-bced-1a60-c197-f8b0a0d838ce.jpg' },
-    { id: 9, url: 'https://mcusercontent.com/9a1afe321b5e531c9e8a98697/images/f7ba5a20-7f7f-1934-9f1d-60ba0cf1029c.jpg' },
-  ]
-  window.onload = creat
-  function creat () {
-    // 获取用户的最高分，并展示（提示游客注册，后续最高分存储）
-    localStorage.maxscore ? (maxscore.innerHTML = '历史最高: ' + localStorage.maxscore + '分') : localStorage.setItem('maxscore', 0)
-
-    //无色差后通关
-    if (opacity >= 1) {
-      alert(points + '分\n你通关了！')
-      localStorage.maxscore = points
-      points = 0
-      count = 2
-      opacity = .6
-      max_click = 0
-      creat()  // 重新开始
-      return
-    }
-
-    // 每次点击之后需要更新的参数- 点错次数 ， 分数 ，新色块 ，颜色 ， 随机色差块
-    max_click = 0
-    score.innerHTML = points
-    var html = ''
-    var color = randColor()
-    var goodsPicList_num = Math.floor(Math.random() * 10)
-    for (var i = 0; i < count * count; i++) {
-      if (Level == 'A') {
-        // 纯色版
-        html += '<span style="background: ' + color + '; width: ' + 100 / count + '%; padding-top: ' + 100 / count + '%;"></span>'
-        // html += '<span style="background: linear-gradient(-45deg,' + color + ',#e73c7e,' + color + ',#23d5ab' + '); width: ' + 100 / count + '%; padding-top: ' + 100 / count + '%;' + 'background-size: 600% 600%;' + 'animation: gradientBG 5s ease infinite;" ></span>'
-      } else if (Level == 'B') {
-        // 图片简单版
-        html += '<span style="background:url(' + goodsPicList[goodsPicList_num].url + ') no-repeat center / 100% ' + '; width: ' + 100 / count + '%; padding-top: ' + 100 / count + '%;"></span>'
-      } else if (Level == 'C') {
-        // 图片困难版
-        html += '<span style="background:url(' + goodsPicList[Math.floor(Math.random() * 10)].url + ') no-repeat center / 100% ' + '; width: ' + 100 / count + '%; padding-top: ' + 100 / count + '%;"></span>'
-      }
-    }
-    wrap.innerHTML = html
-    // 每块添加高度
-    document.querySelectorAll('#wrap span').forEach(function (el, i) {
-      el.style.height = el.offsetWidth + 'px'
-    })
-    //随机色差块
-    document.querySelectorAll('#wrap span')[Math.floor(Math.random() * count * count)].classList.add('opacity')  // 随机一块添加 opacity 类
-    var span = document.querySelectorAll('#wrap span') // 获取每块span色块
-    var op = document.querySelector('.opacity') // 获取色差色块
-    op.style.opacity = opacity  // 添加色差
-
-    // 每一块添加点击错误事件，
-    span.forEach(function (el) {
-      el.onclick = function () {
-        max_click++
-        if (max_click >= 1) { // 如果点击到其它色块，记录最高分，初始化
-          localStorage.maxscore < points && (localStorage.maxscore = points)
-          var again = confirm('\t' + points + '分\t\n\t再来一局不？\t') // 跳回遮罩层
-          points = 0
-          count = 2
-          opacity = .6
-          max_click = 0
-
-          meter.setAttribute('value', 60)
-          GameAlltime = 60
-          clearInterval(timer2)
-          maskBox.style.display = 'block'
-          mask_start.style.display = 'block'
-          mask_counttime.style.display = 'none'
-
-          creat() // 重新开始
-        }
-      }
-    })
-
-    // 色差块绑定下一级事件，覆盖上面的错误事件
-    op.onclick = function () {
-      points++
-      count++
-      if (count > 8) {
-        count = 8
-        opacity > .8 ? opacity /= .995 : opacity /= .99
-      }
-      localStorage.maxscore < points && (localStorage.maxscore = points)
-      creat() // 在原来的基础上重新开始
-    }
-
-  }
-
-  // 功能1; 点击start => 倒计时 3 2 1 进入 => 开始 =====
-  var timer2 = null
-  var enter = document.querySelector('.enter')
-  var mask = document.querySelector('.mask')
-  var maskBox = document.querySelector('.mask_part')
-  var mask_start = document.querySelector('.mask_start')
-  var mask_counttime = document.querySelector('.mask_counttime')
-  var time = 3
-  enter.addEventListener('click', function () {
-    if (playGameTime == 3) {
-      alert('今天的机会用完了,邀请好友增加1次机会')
-    } else {
-      mask_start.style.display = 'none'
-      mask_counttime.style.display = 'block'
-      time = time - 1
-      Countdown() // 倒计时 3 2 1 
-      playGameTime = playGameTime + 1
-    }
-  })
-  function Countdown () {
-    var timer1 = setInterval(() => {
-      mask_counttime.innerHTML = time
-      time = time - 1
-      if (time == -1) {
-        clearInterval(timer1)
-        maskBox.style.display = 'none'
-        time = 3
-        mask_counttime.innerHTML = time
-        GameCountdown()
-      }
-    }, 1000)
-  }
-
-  // 功能2; 计时器 15s =====
-  var GameAlltime = 60
-  var meter = document.querySelector('.meter')
-  function GameCountdown () {
-    meter.setAttribute('value', GameAlltime)
-    GameAlltime = GameAlltime - 1
-    timer2 = setInterval(() => {
-      meter.setAttribute('value', GameAlltime)
-      if (meter.getAttribute('value') < 10) {
-        meter.classList.add('animate__bounceIn')
-      }
-      GameAlltime = GameAlltime - 1
-      if (GameAlltime == -1) {
-        clearInterval(timer2)
-        // 结束
-        alert('game over') // 跳回遮罩层
-        maskBox.style.display = 'block'
-        mask_start.style.display = 'block'
-        mask_counttime.style.display = 'none'
-        points = 0
-        count = 2
-        opacity = .6
-        max_click = 0
-        meter.setAttribute('value', 60)
-        GameAlltime = 60
-        creat()
-      }
-    }, 250)
-  }
-
-
-  // 功能3 ：选择不同难易等级
-  var playGameTime = 0  // 游戏次数
-  var Level = 'A' // 选择困难等级
-  var difficultyLevel = document.querySelector('#difficultyLevel')
-  difficultyLevel.addEventListener('change', function (e) {
-    Level = e.target.value
-    creat()
-  })
-
-</script>
-
 </html>
